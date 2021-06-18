@@ -1,10 +1,16 @@
 package mail.page;
 
 import io.qameta.allure.Step;
+import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class MailBoxPage {
 
@@ -40,11 +46,26 @@ public class MailBoxPage {
      */
     @FindBy(css = "input[placeholder='Поиск']")
     private WebElement searchInMailbox;
+
     /**
      * Кнопка "Найти" в поиске писем
      */
     @FindBy(css = "button[class='control button2 button2_view_default button2_tone_mail-suggest-themed button2_size_n button2_theme_normal button2_pin_clear-round button2_type_submit search-input__form-button']")
     private WebElement submitSearchInMailbox;
+
+    /**
+     * Кнопка "Папки" после поиска
+     */
+
+    @FindBy(xpath = "//*[@id=\"nb-1\"]/body/div[2]/div[7]/div/div[3]/div[3]/div[1]/div/div/button[3]")
+    private WebElement folders;
+
+    /**
+     * Кнопка "Входящие" в меню "Папки"
+     */
+    @FindBy(css = "[@id=\"nb-1\"]/body/div[9]/div/div/div[1]/span" )
+    private WebElement inputFolder;
+
     /**
      * Количество найденных писем
      */
@@ -95,6 +116,18 @@ public class MailBoxPage {
     @Step("Кнопка поиска")
     public mail.page.MailBoxPage submitSearchMailBox() {
         submitSearchInMailbox.click();
+        return this;
+    }
+
+    @Step("Кнопка папки")
+    public mail.page.MailBoxPage submitMailBox() {
+        folders.click();
+        return this;
+    }
+//<div data-lego="react" aria-selected="false" aria-disabled="false" role="option" class="control menu__item menu__item_type_option"><span data-lego="react" class="menu__text">Входящие</span></div>
+    @Step("Кнопка входящие папки")
+    public mail.page.MailBoxPage submitInputMailBox() {
+             driver.findElement(By.xpath(".//div[@class='menu menu_size_s menu_theme_normal menu_view_classic menu_type_radio']")).findElement(By.xpath(".//*[text()='Входящие']")).click();
         return this;
     }
 
