@@ -63,6 +63,7 @@ public class MailBoxPage {
     /**
      * Кнопка "Входящие" в меню "Папки"
      */
+    //TODO
     @FindBy(css = "[@id=\"nb-1\"]/body/div[9]/div/div/div[1]/span" )
     private WebElement inputFolder;
 
@@ -124,7 +125,7 @@ public class MailBoxPage {
         folders.click();
         return this;
     }
-//<div data-lego="react" aria-selected="false" aria-disabled="false" role="option" class="control menu__item menu__item_type_option"><span data-lego="react" class="menu__text">Входящие</span></div>
+
     @Step("Кнопка входящие папки")
     public mail.page.MailBoxPage submitInputMailBox() {
              driver.findElement(By.xpath(".//div[@class='menu menu_size_s menu_theme_normal menu_view_classic menu_type_radio']")).findElement(By.xpath(".//*[text()='Входящие']")).click();
