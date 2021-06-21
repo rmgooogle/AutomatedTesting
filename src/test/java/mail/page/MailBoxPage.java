@@ -2,7 +2,7 @@ package mail.page;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
-import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,31 +10,35 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
 
 public class MailBoxPage {
 
     public WebDriver driver;
+
     /**
      * Написать новое письмо
      */
     @FindBy(css = "a[class='mail-ComposeButton js-main-action-compose']")
     private WebElement newMailSend;
+
     /**
      * ввести адрес
      */
     @FindBy(css = "div[class='composeYabbles']")
     private WebElement addressRecipient;
+
     /**
      * ввести тему
      */
     @FindBy(css = "input[class='composeTextField ComposeSubject-TextField']")
     private WebElement mailSubject;
+
     /**
      * ввести текст
      */
     @FindBy(css = "div[placeholder='Напишите что-нибудь']>div")
     private WebElement mailField;
+
     /**
      * кнопка отправки письма
      */
@@ -56,15 +60,13 @@ public class MailBoxPage {
     /**
      * Кнопка "Папки" после поиска
      */
-
     @FindBy(xpath = "//*[@id=\"nb-1\"]/body/div[2]/div[7]/div/div[3]/div[3]/div[1]/div/div/button[3]")
     private WebElement folders;
 
     /**
      * Кнопка "Входящие" в меню "Папки"
      */
-    //TODO
-    @FindBy(css = "[@id=\"nb-1\"]/body/div[9]/div/div/div[1]/span" )
+    @FindBy(css = "[@id=\"nb-1\"]/body/div[9]/div/div/div[1]/span")
     private WebElement inputFolder;
 
     /**
@@ -74,69 +76,76 @@ public class MailBoxPage {
     private WebElement messageCountBySearch;
 
     public MailBoxPage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
         this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
 
     @Step("Создание нового письма")
-    public mail.page.MailBoxPage newMail() {
+    public MailBoxPage newMail() {
+        waitElement(newMailSend);
         newMailSend.click();
         return this;
     }
 
     @Step("Ввод адреса {0} кому отправляется письмо")
-    public mail.page.MailBoxPage inputAddressRecipient(String address) {
+    public MailBoxPage inputAddressRecipient(String address) {
         addressRecipient.sendKeys(address);
         return this;
     }
 
     @Step("Ввод темы {0} письма")
-    public mail.page.MailBoxPage inputMailSubject(String subject) {
+    public MailBoxPage inputMailSubject(String subject) {
         mailSubject.sendKeys(subject);
         return this;
     }
 
     @Step("Ввод текста {0} сообщения")
-    public mail.page.MailBoxPage inputMailText(String mailText) {
+    public MailBoxPage inputMailText(String mailText) {
         mailField.sendKeys(mailText);
         return this;
     }
 
     @Step("Кнопка отправки письма")
-    public mail.page.MailBoxPage sendMailButton() {
+    public MailBoxPage sendMailButton() {
         sendButton.click();
         return this;
     }
 
     @Step("Ввод строки {0} для поиска")
-    public mail.page.MailBoxPage inputInMailBox(String line) {
+    public MailBoxPage inputInMailBox(String line) {
         searchInMailbox.sendKeys(line);
         return this;
     }
 
     @Step("Кнопка поиска")
-    public mail.page.MailBoxPage submitSearchMailBox() {
+    public MailBoxPage submitSearchMailBox() {
         submitSearchInMailbox.click();
         return this;
     }
 
     @Step("Кнопка папки")
-    public mail.page.MailBoxPage submitMailBox() {
+    public MailBoxPage submitMailBox() {
         folders.click();
         return this;
     }
 
     @Step("Кнопка входящие папки")
-    public mail.page.MailBoxPage submitInputMailBox() {
-             driver.findElement(By.xpath(".//div[@class='menu menu_size_s menu_theme_normal menu_view_classic menu_type_radio']")).findElement(By.xpath(".//*[text()='Входящие']")).click();
+    public MailBoxPage submitInputMailBox() {
+        driver.findElement(By.xpath(".//div[@class='menu menu_size_s menu_theme_normal menu_view_classic menu_type_radio']")).findElement(By.xpath(".//*[text()='Входящие']")).click();
         return this;
     }
 
     @Step("Число писем")
     public String getCountFoundedMails() {
+        waitElement(messageCountBySearch);
         return messageCountBySearch.getText();
     }
 
+    public void waitElement(WebElement element) {
+        WebDriverWait wait = (WebDriverWait) new WebDriverWait(driver, 5)
+                .ignoring(StaleElementReferenceException.class);
+        wait.until(ExpectedConditions.visibilityOf(element));
+    }
 }
 
 
